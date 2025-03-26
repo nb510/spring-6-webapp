@@ -8,6 +8,10 @@ import guru.springframework.spring6webapp.repository.BookRepository;
 import guru.springframework.spring6webapp.repository.PublisherRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+import java.util.Set;
 
 @Component
 public class BootstrapData implements CommandLineRunner {
@@ -24,6 +28,7 @@ public class BootstrapData implements CommandLineRunner {
     }
 
     @Override
+    @Transactional // to make p.get().getBooks() work
     public void run(String... args) throws Exception {
         Author eric = new Author();
         eric.setFirstName("Eric");
@@ -44,6 +49,7 @@ public class BootstrapData implements CommandLineRunner {
         publisher.setCity("Moscow");
         publisher.setState("Moscow");
         publisher.setZip("123123");
+        publisher.getBooks().add(ddd);
 
         publisherRepository.save(publisher);
 
@@ -51,5 +57,17 @@ public class BootstrapData implements CommandLineRunner {
         System.out.printf("Book count: %s%n", bookRepository.count());
         System.out.printf("Author count: %s%n", authorRepository.count());
         System.out.printf("Publisher count: %s%n", publisherRepository.count());
+
+        Optional<Publisher> p = publisherRepository.findById(publisher.getId());
+        if (p.isEmpty()) {
+            return;
+        }
+        Set<Book> books = p.get().getBooks();
+        if (books == null || books.isEmpty()) {
+            System.out.println("No books!");
+        } else {
+            System.out.printf("Publisher's book count: %s%n", books.size());
+        }
+
     }
 }
