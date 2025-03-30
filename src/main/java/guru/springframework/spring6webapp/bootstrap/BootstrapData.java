@@ -41,8 +41,8 @@ public class BootstrapData implements CommandLineRunner {
         eric = authorRepository.save(eric);
         ddd = bookRepository.save(ddd);
 
-        eric.getBooks().add(ddd);
-        authorRepository.save(eric);
+        ddd.getAuthors().add(eric);
+        bookRepository.save(ddd);
 
         Publisher publisher = new Publisher();
         publisher.setPublisherName("Alpina Non Fiction");
