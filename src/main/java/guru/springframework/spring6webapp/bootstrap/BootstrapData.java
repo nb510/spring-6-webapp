@@ -49,9 +49,10 @@ public class BootstrapData implements CommandLineRunner {
         publisher.setCity("Moscow");
         publisher.setState("Moscow");
         publisher.setZip("123123");
-        publisher.getBooks().add(ddd);
-
         publisherRepository.save(publisher);
+
+        ddd.setPublisher(publisher);
+        bookRepository.save(ddd);
 
         System.out.println("Inside Bootstrap");
         System.out.printf("Book count: %s%n", bookRepository.count());
